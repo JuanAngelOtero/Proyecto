@@ -1,0 +1,10 @@
+juan angel otero;10923239;disfrutappi;2023-05-12
+juan angel ;12345678;disfrutappi;2023-05-12
+juan;123456;disfrutappi;2023-05-12
+juan;123456;disfrutappi;2023-05-12
+Juan Angel;12345;disfrutappi;2023-05-12
+juan;1234567;disfrutappi;2023-05-14
+juan;12334567;disfrutappi;2023-05-14
+juan;123445;disfrutappi;2023-05-15
+juan ;12398;disfrutappi;2023-05-16
+juan;1234434;disfrutappi;2023-05-16
