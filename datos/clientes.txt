@@ -8,3 +8,6 @@ juan;12334567;disfrutappi;2023-05-14
 juan;123445;disfrutappi;2023-05-15
 juan ;12398;disfrutappi;2023-05-16
 juan;1234434;disfrutappi;2023-05-16
+juan otero;1062433097;disfrutappi;2023-05-18
+juan;123456;disfrutappi;2023-05-18
+juan;1234567;disfrutappi;2023-05-18

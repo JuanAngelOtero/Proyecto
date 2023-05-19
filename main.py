@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
-
+from cliente import Cliente
 class Ventana(QWidget):
     def __init__(self):
         super().__init__()
@@ -504,6 +504,14 @@ class Ventana(QWidget):
         boton_verificar.setGeometry(400, 370, 100, 30)
         boton_verificar.setStyleSheet('background-color:  #B0F2C2;')
 
+        # Creamos el botón para verificar el código y abrir la otra ventana
+        boton_informacion = QPushButton('INFORMACIÓN', ventana_personal)
+        boton_informacion.setGeometry(5, 760, 150, 30)
+        # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
+        boton_informacion.setCursor(Qt.PointingHandCursor)
+        boton_informacion.setStyleSheet('background-color: #B0F2C2;')
+        boton_informacion.clicked.connect(self.abrir_ventaInformacion)
+
         def abrir_ventana_otra():
             ventana_otra = QDialog(self)
             ventana_otra.setWindowTitle('PERSONAL AUTORIZADO')
@@ -594,6 +602,7 @@ class Ventana(QWidget):
 
         boton_verificar.clicked.connect(verificar_codigo)
 
+
         # Creamos el botón para volver a la ventana principal
         boton_volver = QPushButton('Volver', ventana_personal)
         boton_volver.setGeometry(110, 150, 80, 30)
@@ -606,6 +615,136 @@ class Ventana(QWidget):
         boton_volver.clicked.connect(lambda: (ventana_personal.close(), self.show()))
 
         ventana_personal.exec_()
+
+    def abrir_ventaInformacion(self):
+        # Ocultamos la ventana actual
+        self.close()
+
+
+        ventana_informacion = QDialog(self)
+        ventana_informacion.setWindowTitle('INFORMACION DE REGISTRO')
+        ventana_informacion.resize(1200, 600)  # Tamaño personalizado para que todos los elementos sean visibles
+        ventana_informacion.setStyleSheet('background-color: white;')
+
+        # abrimos el archivo en modo de lectura:
+        self.file = open('datos/clientes.txt', 'rb')
+
+        # Lista vacia para guardar todos los usuarios:
+        self.usuarios = []
+
+        # recorremos el archivo linea por linea:
+        while self.file:
+            linea = self.file.readline().decode('UTF-8')
+            # Obtenemos del string una lista con  datos separados por ;
+
+            lista = linea.split(";")
+            # se para si ya no hay mas registros en el archivo
+            if linea == '':
+                break
+            # Creamos un objeto de tipo cliente llamdo u
+            u = Cliente(
+                lista[0],
+                lista[1],
+                lista[2],
+                lista[3],
+
+            )
+            # Metemos el objeto en la lista de ususarios:
+            self.usuarios.append(u)
+
+        # Cerramos el archivo:
+        self.file.close()
+
+        # En este punto ya tenmos la lista usuarios con todos los ususarios:
+
+        # obtenemos el numero de ususarios registrados:
+        # consultamos el tamaño de la lista usuarios:
+        self.numeroUsuarios = len(self.usuarios)
+
+        # contador de elementos para controlar los usuarios en la lista usuarios.
+        self.contador = 0
+
+        # Establecemos la distribución de los elementos en layout vertical:
+        self.vertical = QVBoxLayout()
+
+        # Hacemos el letrero:
+        self.letrero1 = QLabel()
+
+        # Le escribimos el texto:
+        self.letrero1.setText("PERSONAL AUTORIZADO QUE HA INGRESADO")
+
+        # Le asignamos el tipo de letra:
+        self.letrero1.setFont(QFont("Times New Roman", 20))
+
+        # le ponemos color de texto y margenes:
+        self.letrero1.setStyleSheet("color: #000080")
+
+        # Agregamos el letrero en la primera fila:
+        self.vertical.addWidget(self.letrero1)
+
+        # Ponemos un espacio después:
+        self.vertical.addStretch()
+
+        # Creamos un scroll:
+        self.scrollArea = QScrollArea()
+
+        # Hacemos que el scroll se adapte a diferentes tamaños:
+        self.scrollArea.setWidgetResizable(True)
+
+        # Creamos una tabla:
+        self.tabla = QTableWidget()
+
+        # Definimos el número de columnas que tendrá la tabla:
+        self.tabla.setColumnCount(4)
+
+        # Definimos el ancho de cada columna:
+        self.tabla.setColumnWidth(0, 300)
+        self.tabla.setColumnWidth(1, 300)
+        self.tabla.setColumnWidth(2, 300)
+        self.tabla.setColumnWidth(3, 300)
+
+        # Definimos el texto de la cabecera de la tabla:
+        self.tabla.setHorizontalHeaderLabels(['Nombre',
+                                              'Documento',
+                                              'Codigo',
+                                              'Fecha', ])
+
+        # Establecemos el número de filas:
+        self.tabla.setRowCount(self.numeroUsuarios)
+
+        # Llenamos la tabla:
+        for u in self.usuarios:
+            self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.nombre_completo))
+            self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.cedula))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.codigo_ingresado))
+            self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.datetime))
+            self.contador += 1
+
+        # Metemos la tabla en el scroll:
+        self.scrollArea.setWidget(self.tabla)
+
+        # Métodos en el layout vertical el scroll:
+        self.vertical.addWidget(self.scrollArea)
+
+        # Ponemos un espacio después:
+        self.vertical.addStretch()
+
+        # Creamos el botón para volver a la ventana principal
+        boton_volver = QPushButton('Volver', ventana_informacion)
+        boton_volver.setGeometry(110, 150, 80, 30)
+        # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
+        boton_volver.setCursor(Qt.PointingHandCursor)
+        boton_volver.setStyleSheet('background-color:  #B0F2C2;')
+        boton_volver.move(ventana_informacion.width() - boton_volver.width() - 10,
+                          ventana_informacion.height() - boton_volver.height() - 10)
+
+        boton_volver.clicked.connect(lambda: (ventana_informacion.close(), self.show()))
+
+        # Establecemos el layout vertical como el layout principal de la ventana:
+        ventana_informacion.setLayout(self.vertical)
+
+        ventana_informacion.exec_()
+
 
 
 if __name__ == '__main__':
