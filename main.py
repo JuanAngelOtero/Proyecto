@@ -436,21 +436,21 @@ class Ventana(QWidget):
 
     def abrir_ventana_personal(self):
         self.hide()  # Ocultamos la ventana actual
-        ventana_personal = QDialog(self)
-        ventana_personal.setWindowTitle('PERSONAL AUTORIZADO')
-        ventana_personal.resize(1000, 800)
+        self.ventana_personal = QDialog(self)
+        self.ventana_personal.setWindowTitle('PERSONAL AUTORIZADO')
+        self.ventana_personal.resize(1000, 800)
 
         # Creamos los campos de texto para ingresar el nombre completo y la cédula
-        nombre_label = QLabel('NOMBRE COMPLETO*: ', ventana_personal)
+        nombre_label = QLabel('NOMBRE COMPLETO*: ', self.ventana_personal)
         nombre_label.setGeometry(110, 100, 250, 30)
 
-        nombre_texto = QLineEdit(ventana_personal)
+        nombre_texto = QLineEdit(self.ventana_personal)
         nombre_texto.setGeometry(280, 100, 150, 30)
 
-        cedula_label = QLabel('CÉDULA*: ', ventana_personal)
+        cedula_label = QLabel('CÉDULA*: ', self.ventana_personal)
         cedula_label.setGeometry(110, 145, 250, 30)
 
-        cedula_texto = QLineEdit(ventana_personal)
+        cedula_texto = QLineEdit(self.ventana_personal)
         cedula_texto.setGeometry(280, 145, 150, 30)
 
         # Hacemos el letrero:
@@ -487,30 +487,31 @@ class Ventana(QWidget):
         layout.addStretch()
         layout.setAlignment(Qt.AlignCenter)
 
-        ventana_personal.setLayout(layout)
+        self.ventana_personal.setLayout(layout)
 
         # Creamos el campo de texto para ingresar el código
-        codigo_label = QLabel('INGRESÉ EL CÓDIGO*: ', ventana_personal)
+        codigo_label = QLabel('INGRESÉ EL CÓDIGO*: ', self.ventana_personal)
         codigo_label.setGeometry(20, 320, 250, 30)
 
-        codigo_texto = QLineEdit(ventana_personal)
+        codigo_texto = QLineEdit(self.ventana_personal)
         codigo_texto.setGeometry(18, 350, 150, 30)
         codigo_texto.setEchoMode(QLineEdit.Password)
 
         # Creamos el botón para verificar el código y abrir la otra ventana
-        boton_verificar = QPushButton('INGRESAR', ventana_personal)
+        boton_verificar = QPushButton('INGRESAR', self.ventana_personal)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
         boton_verificar.setCursor(Qt.PointingHandCursor)
         boton_verificar.setGeometry(400, 370, 100, 30)
         boton_verificar.setStyleSheet('background-color:  #B0F2C2;')
 
         # Creamos el botón para verificar el código y abrir la otra ventana
-        boton_informacion = QPushButton('INFORMACIÓN', ventana_personal)
+        boton_informacion = QPushButton('INFORMACIÓN', self.ventana_personal)
         boton_informacion.setGeometry(5, 760, 150, 30)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
         boton_informacion.setCursor(Qt.PointingHandCursor)
         boton_informacion.setStyleSheet('background-color: #B0F2C2;')
         boton_informacion.clicked.connect(self.abrir_ventaInformacion)
+
 
         def abrir_ventana_otra():
             ventana_otra = QDialog(self)
@@ -555,22 +556,22 @@ class Ventana(QWidget):
 
             # Verificar que todos los campos estén completos
             if not codigo_ingresado or not nombre_completo or not cedula:
-                QMessageBox.warning(ventana_personal, 'Error', 'Por favor, ingrese todos los campos.')
+                QMessageBox.warning(self.ventana_personal, 'Error', 'Por favor, ingrese todos los campos.')
                 datos_correctos = False
 
             # Verificar que la cédula sea un número
             if not cedula.isnumeric():
-                QMessageBox.warning(ventana_personal, 'Error',
+                QMessageBox.warning(self.ventana_personal, 'Error',
                                     'Por favor, ingrese solo números en el campo de la cédula.')
                 datos_correctos = False
 
             if datos_correctos:
                 if codigo_ingresado == 'disfrutappi':
                     abrir_ventana_otra()
-                    ventana_personal.close()
+                    self.ventana_personal.close()
                     self.show()
                 else:
-                    QMessageBox.warning(ventana_personal, 'Error', 'Código incorrecto')
+                    QMessageBox.warning(self.ventana_personal, 'Error', 'Código incorrecto')
                     datos_correctos = False
 
             # si los datos están correctos:
@@ -598,28 +599,27 @@ class Ventana(QWidget):
                 file.close()
 
             else:
-                QMessageBox.warning(ventana_personal, 'Error', 'Por favor, corrija los datos ingresados.')
+                QMessageBox.warning(self.ventana_personal, 'Error', 'Por favor, corrija los datos ingresados.')
 
         boton_verificar.clicked.connect(verificar_codigo)
 
 
         # Creamos el botón para volver a la ventana principal
-        boton_volver = QPushButton('Volver', ventana_personal)
+        boton_volver = QPushButton('Volver', self.ventana_personal)
         boton_volver.setGeometry(110, 150, 80, 30)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
         boton_volver.setCursor(Qt.PointingHandCursor)
         boton_volver.setStyleSheet('background-color:  #B0F2C2;')
-        boton_volver.move(ventana_personal.width() - boton_volver.width() - 10,
-                          ventana_personal.height() - boton_volver.height() - 10)
+        boton_volver.move(self.ventana_personal.width() - boton_volver.width() - 10,
+                          self.ventana_personal.height() - boton_volver.height() - 10)
 
-        boton_volver.clicked.connect(lambda: (ventana_personal.close(), self.show()))
+        boton_volver.clicked.connect(lambda: (self.ventana_personal.close(), self.show()))
 
-        ventana_personal.exec_()
+        self.ventana_personal.exec_()
 
     def abrir_ventaInformacion(self):
         # Ocultamos la ventana actual
-        self.close()
-
+        self.ventana_personal.close()
 
         ventana_informacion = QDialog(self)
         ventana_informacion.setWindowTitle('INFORMACION DE REGISTRO')
@@ -632,7 +632,7 @@ class Ventana(QWidget):
         # Lista vacia para guardar todos los usuarios:
         self.usuarios = []
 
-        # recorremos el archivo linea por linea:
+        # recorremos el archivo línea por línea:
         while self.file:
             linea = self.file.readline().decode('UTF-8')
             # Obtenemos del string una lista con  datos separados por ;
@@ -657,7 +657,7 @@ class Ventana(QWidget):
 
         # En este punto ya tenmos la lista usuarios con todos los ususarios:
 
-        # obtenemos el numero de ususarios registrados:
+        # obtenemos el número de ususarios registrados:
         # consultamos el tamaño de la lista usuarios:
         self.numeroUsuarios = len(self.usuarios)
 
