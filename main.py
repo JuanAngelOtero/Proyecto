@@ -1,12 +1,13 @@
 import datetime
 import sys
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QPixmap, QFont, QIcon
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from cliente import Cliente
-class Ventana(QWidget):
+class Ventana(QMainWindow):
+    saldo = 0
     def __init__(self):
         super().__init__()
         self.setWindowTitle('DISFRUTA')
@@ -25,6 +26,14 @@ class Ventana(QWidget):
         label_imagen.setPixmap(pixmap)
         label_imagen.move(5, 5)
 
+        # Dentro del método donde creas la ventana existente
+        self.background_image = QPixmap("imagenes/disfrutaPPIfonts.png")
+        self.background_label = QLabel(self)
+        self.background_label.setPixmap(self.background_image)
+        self.background_label.setGeometry(0, 0, self.width(), self.height())
+        self.background_label.setScaledContents(True)
+
+
         # Agregamos el letrero de bienvenida
         label_bienvenida = QLabel('BIENVENIDO A DISFRUTA', self)
         label_bienvenida.setStyleSheet('background-color: #B0F2C2; color: black;')
@@ -33,9 +42,10 @@ class Ventana(QWidget):
 
         # Colocamos el letrero en el medio de la ventana en la parte superior
         label_bienvenida.setAlignment(Qt.AlignCenter)
-        label_bienvenida.setGeometry(153, 5, self.width(), 40)
+        label_bienvenida.setGeometry(140, 0, self.width(), 50)
 
-        # Creamos los botones y los agregamos a la ventana
+        # ----- BOTONES PRINCIPALES ------
+        # Botón FRUTAS
         boton_frutas = QPushButton('FRUTAS', self)
         boton_frutas.setGeometry(250, 150, 150, 120)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
@@ -44,6 +54,7 @@ class Ventana(QWidget):
 
         boton_frutas.clicked.connect(self.abrir_ventana_frutas)
 
+        #  Botón VERDURA
         boton_verduras = QPushButton('VERDURAS', self)
         boton_verduras.setGeometry(250, 300, 150, 120)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
@@ -51,6 +62,7 @@ class Ventana(QWidget):
         boton_verduras.setStyleSheet('background-color: #FAFCAF;')
         boton_verduras.clicked.connect(self.abrir_ventana_verduras)
 
+        # botón CARRITO
         boton_carrito = QPushButton('CARRITO', self)
         boton_carrito.setGeometry(250, 450, 150, 120)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
@@ -58,7 +70,7 @@ class Ventana(QWidget):
         boton_carrito.setStyleSheet('background-color: #FFE1AE;')
         boton_carrito.clicked.connect(self.abrir_ventana_carrito)
 
-        # Creamos el botón "Personal Autorizado"
+        # ---- BOTON---- "Personal Autorizado"
         boton_personal = QPushButton('PERSONAL AUTORIZADO', self)
         boton_personal.setGeometry(750, 730, 230, 50)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
@@ -70,7 +82,7 @@ class Ventana(QWidget):
         self.hide()  # Ocultamos la ventana actual
         ventana_frutas = QDialog(self)
         ventana_frutas.setWindowTitle('FRUTAS')
-        ventana_frutas.resize(1000, 800)
+        ventana_frutas.resize(1500, 800)
         ventana_frutas.setStyleSheet('background-color: white;')
 
         # Creamos un QLabel con el mensaje "Bienvenido"
@@ -81,7 +93,7 @@ class Ventana(QWidget):
         mensaje_bienvenida.setFont(QFont('Times New Roman', 10))
 
         # CAR IMAGEN PRODUCT
-        # producto fresa
+        # producto FRESA
         label_imagen = QLabel('', ventana_frutas)
         label_imagen.setGeometry(50, 50, 200, 200)
         pixmap = QPixmap('imagenes/fresa.jpg')
@@ -89,13 +101,19 @@ class Ventana(QWidget):
         label_imagen.setPixmap(pixmap)
 
         nombre_producto = QLabel('Bandeja de fresa: \n$8.700', ventana_frutas)
+        # TAMAÑO TITULO
         nombre_producto.setGeometry(50, 200, 250, 80)
         nombre_producto.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(50, 270)
-        b.resize(320, 40)
+        self.check_fresa = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_fresa.move(50, 270)
+        self.check_fresa.resize(320, 40)
+
+        self.valor_fresa = 8700
+
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_fresa.setCursor(Qt.PointingHandCursor)
+        self.check_fresa.toggled.connect(self.mostrar_nombre_precio_fresa)
+        self.check_fresa.toggled.connect(self.agregar_al_carrito)
 
         # producto sandia FRUTA2
         label_imagen2 = QLabel('', ventana_frutas)
@@ -107,11 +125,15 @@ class Ventana(QWidget):
         nombre_producto2 = QLabel('Sandia 1 und: \n$13.500', ventana_frutas)
         nombre_producto2.setGeometry(320, 200, 250, 80)
         nombre_producto2.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(320, 270)
-        b.resize(320, 40)
+        self.check_sandia = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_sandia.move(320, 270)
+        self.check_sandia.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_sandia.setCursor(Qt.PointingHandCursor)
+        self.valor_sandia = 13500
+
+        self.check_sandia.toggled.connect(self.mostrar_nombre_precios_sandia)
+        self.check_sandia.toggled.connect(self.agregar_al_carrito_sandia)
 
         # producto piña FRUTA3
         label_imagen3= QLabel('', ventana_frutas)
@@ -126,11 +148,14 @@ class Ventana(QWidget):
         nombre_producto3 = QLabel('Piña 1 und: \n$6.500', ventana_frutas)
         nombre_producto3.setGeometry(550, 200, 250, 80)
         nombre_producto3.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(550, 270)
-        b.resize(320, 40)
+        self.check_pina = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_pina.move(550, 270)
+        self.check_pina.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_pina.setCursor(Qt.PointingHandCursor)
+        self.valor_pina= 6500
+        self.check_pina.toggled.connect(self.mostrar_nombre_precios_pina)
+        self.check_pina.toggled.connect(self.agregar_al_carrito_pina)
 
 
         # producto pera FRUTA4
@@ -144,11 +169,14 @@ class Ventana(QWidget):
         nombre_producto4 = QLabel('Pera 1 und: \n$1.700', ventana_frutas)
         nombre_producto4.setGeometry(800, 200, 250, 80)
         nombre_producto4.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(800, 270)
-        b.resize(320, 40)
+        self.check_pera = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_pera.move(800, 270)
+        self.check_pera.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_pera.setCursor(Qt.PointingHandCursor)
+        self.valor_pera = 1700
+        self.check_pera.toggled.connect(self.mostrar_nombre_precios_pera)
+        self.check_pera.toggled.connect(self.agregar_al_carrito_pera)
 
         # producto uva Fruta5
         label_imagen5 = QLabel('', ventana_frutas)
@@ -160,11 +188,14 @@ class Ventana(QWidget):
         nombre_producto5 = QLabel('Bandeja de uva: \n$15.400', ventana_frutas)
         nombre_producto5.setGeometry(50, 450, 250, 80)
         nombre_producto5.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(50, 520)
-        b.resize(320, 40)
+        self.check_uva = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_uva.move(50, 520)
+        self.check_uva.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_uva.setCursor(Qt.PointingHandCursor)
+        self.valor_uva = 15400
+        self.check_uva.toggled.connect(self.mostrar_nombre_precios_uva)
+        self.check_uva.toggled.connect(self.agregar_al_carrito_uva)
 
         # producto mango FRUTA6
         label_imagen6 = QLabel('', ventana_frutas)
@@ -176,11 +207,14 @@ class Ventana(QWidget):
         nombre_producto6 = QLabel('Mango 1 und: \n$1.800', ventana_frutas)
         nombre_producto6.setGeometry(320, 450, 250, 80)
         nombre_producto6.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(320, 520)
-        b.resize(320, 40)
+        self.check_mango = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_mango.move(320, 520)
+        self.check_mango.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_mango.setCursor(Qt.PointingHandCursor)
+        self.valor_mango = 1800
+        self.check_mango.toggled.connect(self.mostrar_nombre_precios_mango)
+        self.check_mango.toggled.connect(self.agregar_al_carrito_mango)
 
         # producto Papaya FRUTA7
         label_imagen7 = QLabel('', ventana_frutas)
@@ -192,11 +226,15 @@ class Ventana(QWidget):
         nombre_producto7 = QLabel('Papaya 1 und: \n$4.300', ventana_frutas)
         nombre_producto7.setGeometry(550, 450, 250, 80)
         nombre_producto7.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(550, 520)
-        b.resize(320, 40)
+        self.check_papaya = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_papaya.move(550, 520)
+        self.check_papaya.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_papaya.setCursor(Qt.PointingHandCursor)
+        self.valor_papaya = 4300
+        self.check_papaya.toggled.connect(self.mostrar_nombre_precios_papaya)
+        self.check_papaya.toggled.connect(self.agregar_al_carrito_papaya)
+
 
 
         # producto Manzana FRUTA8
@@ -210,11 +248,14 @@ class Ventana(QWidget):
         nombre_producto8 = QLabel('Manzana 1 und: \n$1.700', ventana_frutas)
         nombre_producto8.setGeometry(800, 450, 250, 80)
         nombre_producto8.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_frutas)
-        b.move(800, 520)
-        b.resize(320, 40)
+        self.check_manzana = QCheckBox("Añadir al carrito", ventana_frutas)
+        self.check_manzana.move(800, 520)
+        self.check_manzana.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_manzana.setCursor(Qt.PointingHandCursor)
+        self.valor_manzana = 1700
+        self.check_manzana.toggled.connect(self.mostrar_nombre_precios_manzana)
+        self.check_manzana.toggled.connect(self.agregar_al_carrito_manzana)
 
 
         # Añadimos los QLabel a la ventana de frutas
@@ -235,13 +276,55 @@ class Ventana(QWidget):
                           ventana_frutas.height() - boton_volver.height() - 10)
         boton_volver.clicked.connect(lambda: (ventana_frutas.close(), self.show()))
 
+        self.mensaje_precio = QLabel('', ventana_frutas)
+        self.mensaje_precio.setGeometry(1100, 50, 200, 50)
+        self.mensaje_precio.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio2 = QLabel('', ventana_frutas)
+        self.mensaje_precio2.setGeometry(1100, 90, 200, 50)
+        self.mensaje_precio2.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio3 = QLabel('', ventana_frutas)
+        self.mensaje_precio3.setGeometry(1100, 130, 200, 50)
+        self.mensaje_precio3.setFont(QFont('Times New Roman', 10))
+
+
+        self.mensaje_precio4 = QLabel('', ventana_frutas)
+        self.mensaje_precio4.setGeometry(1100, 170, 200, 50)
+        self.mensaje_precio4.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio5 = QLabel('', ventana_frutas)
+        self.mensaje_precio5.setGeometry(1100, 210, 200, 50)
+        self.mensaje_precio5.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio6 = QLabel('', ventana_frutas)
+        self.mensaje_precio6.setGeometry(1100, 250, 200, 50)
+        self.mensaje_precio6.setFont(QFont('Times New Roman', 10))
+
+
+        self.mensaje_precio7 = QLabel('', ventana_frutas)
+        self.mensaje_precio7.setGeometry(1100, 290, 200, 50)
+        self.mensaje_precio7.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio8 = QLabel('', ventana_frutas)
+        self.mensaje_precio8.setGeometry(1100, 330, 200, 50)
+        self.mensaje_precio8.setFont(QFont('Times New Roman', 10))
+
+        self.labeltitulo = QLabel("saldo: "+ str(self.saldo), ventana_frutas)
+        self.labeltitulo.setGeometry(1000, 520, 400, 30)
+        self.labeltitulo.setAlignment(Qt.AlignCenter)
+        self.labeltitulo.setFont(QFont('Times New Roman', 12))
+
+
+
+
         ventana_frutas.exec_()
 
     def abrir_ventana_verduras(self):
         self.hide()  # Ocultamos la ventana actual
         ventana_verduras = QDialog(self)
         ventana_verduras.setWindowTitle('VERDURA')
-        ventana_verduras.resize(1000, 800)
+        ventana_verduras.resize(1500, 800)
         ventana_verduras.setStyleSheet('background-color: white;')
 
         # Creamos un QLabel con el mensaje "Bienvenido"
@@ -250,6 +333,9 @@ class Ventana(QWidget):
         mensaje_bienvenida.setStyleSheet('background-color: #B0F2C2; color: black;')
         mensaje_bienvenida.setAlignment(Qt.AlignCenter)
         mensaje_bienvenida.setFont(QFont('Times New Roman', 12))
+
+        def __init__(self):
+            self.productos_seleccionados = []  # Lista para almacenar los productos seleccionados
 
         # CAR IMAGEN PRODUCT
         # producto APIO
@@ -262,11 +348,14 @@ class Ventana(QWidget):
         nombre_producto = QLabel('Apio 700 GR: \n$4.100', ventana_verduras)
         nombre_producto.setGeometry(50, 200, 250, 80)
         nombre_producto.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(50, 270)
-        b.resize(320, 40)
+        self.check_apio = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_apio.move(50, 270)
+        self.check_apio.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_apio.setCursor(Qt.PointingHandCursor)
+        self.valor_apio = 4100
+        self.check_apio.toggled.connect(self.mostrar_nombre_precios_apio)
+        self.check_apio.toggled.connect(self.agregar_al_carrito_apio)
 
         # producto Cilantro verdura2
         label_imagen2 = QLabel('', ventana_verduras)
@@ -278,11 +367,14 @@ class Ventana(QWidget):
         nombre_producto2 = QLabel('Cilantro 100 GR: \n$1.000', ventana_verduras)
         nombre_producto2.setGeometry(320, 200, 250, 80)
         nombre_producto2.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(320, 270)
-        b.resize(320, 40)
+        self.check_cilantro = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_cilantro.move(320, 270)
+        self.check_cilantro.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_cilantro.setCursor(Qt.PointingHandCursor)
+        self.valor_cilantro = 1000
+        self.check_cilantro.toggled.connect(self.mostrar_nombre_precios_cilantro)
+        self.check_cilantro.toggled.connect(self.agregar_al_carrito_cilantro)
 
         # producto CEBOLLA JUNCA VERDURA3
         label_imagen3 = QLabel('', ventana_verduras)
@@ -295,11 +387,14 @@ class Ventana(QWidget):
         nombre_producto3 = QLabel('Cebolla Junca 500 GR: \n$5.100', ventana_verduras)
         nombre_producto3.setGeometry(550, 200, 250, 80)
         nombre_producto3.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(550, 270)
-        b.resize(320, 40)
+        self.check_cebolla = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_cebolla.move(550, 270)
+        self.check_cebolla.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_cebolla.setCursor(Qt.PointingHandCursor)
+        self.valor_cebolla = 5100
+        self.check_cebolla.toggled.connect(self.mostrar_nombre_precios_cebolla)
+        self.check_cebolla.toggled.connect(self.agregar_al_carrito_cebolla)
 
         # producto Zanahoria FRUTA4
         label_imagen4 = QLabel('', ventana_verduras)
@@ -311,11 +406,14 @@ class Ventana(QWidget):
         nombre_producto4 = QLabel('zanahoria 1000 GR: \n$4.300', ventana_verduras)
         nombre_producto4.setGeometry(800, 200, 250, 80)
         nombre_producto4.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(800, 270)
-        b.resize(320, 40)
+        self.check_zanhoria = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_zanhoria.move(800, 270)
+        self.check_zanhoria.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_zanhoria.setCursor(Qt.PointingHandCursor)
+        self.valor_zanahoria = 4300
+        self.check_zanhoria.toggled.connect(self.mostrar_nombre_precios_zanahoria)
+        self.check_zanhoria.toggled.connect(self.agregar_al_carrito_zanahoria)
 
         # producto Cabolla blanca verdura5
         label_imagen5 = QLabel('', ventana_verduras)
@@ -327,11 +425,14 @@ class Ventana(QWidget):
         nombre_producto5 = QLabel('Cebolla Blanca 1 und: \n$1.100', ventana_verduras)
         nombre_producto5.setGeometry(50, 450, 250, 80)
         nombre_producto5.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(50, 520)
-        b.resize(320, 40)
+        self.check_ceboBlanca = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_ceboBlanca.move(50, 520)
+        self.check_ceboBlanca.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_ceboBlanca.setCursor(Qt.PointingHandCursor)
+        self.valor_ceboBlanca = 1100
+        self.check_ceboBlanca.toggled.connect(self.mostrar_nombre_precios_cebollaBlanca)
+        self.check_ceboBlanca.toggled.connect(self.agregar_al_carrito_ceboBlanca)
 
         # producto cabolla roja Verdura6
         label_imagen6 = QLabel('', ventana_verduras)
@@ -343,11 +444,14 @@ class Ventana(QWidget):
         nombre_producto6 = QLabel('Cebolla Roja 1 und: \n$700', ventana_verduras)
         nombre_producto6.setGeometry(320, 450, 250, 80)
         nombre_producto6.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(320, 520)
-        b.resize(320, 40)
+        self.check_ceboRoja = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_ceboRoja.move(320, 520)
+        self.check_ceboRoja.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_ceboRoja.setCursor(Qt.PointingHandCursor)
+        self.valor_ceboRoja = 700
+        self.check_ceboRoja.toggled.connect(self.mostrar_nombre_precios_cebollaRoja)
+        self.check_ceboRoja.toggled.connect(self.agregar_al_carrito_ceboRoja)
 
         # producto verengena VERDURA7
         label_imagen7 = QLabel('', ventana_verduras)
@@ -356,14 +460,17 @@ class Ventana(QWidget):
         pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
         label_imagen7.setPixmap(pixmap)
 
-        nombre_producto7 = QLabel('Verengena 1 und: \n$2.200', ventana_verduras)
+        nombre_producto7 = QLabel('Berenjena 1 und: \n$2.200', ventana_verduras)
         nombre_producto7.setGeometry(550, 450, 250, 80)
         nombre_producto7.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(550, 520)
-        b.resize(320, 40)
+        self.check_verengena = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_verengena.move(550, 520)
+        self.check_verengena.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_verengena.setCursor(Qt.PointingHandCursor)
+        self.valor_veregena = 2200
+        self.check_verengena.toggled.connect(self.mostrar_nombre_precios_verengena)
+        self.check_verengena.toggled.connect(self.agregar_al_carrito_verengena)
 
         # producto Manzana VERDURA8
         label_imagen8 = QLabel('', ventana_verduras)
@@ -376,11 +483,14 @@ class Ventana(QWidget):
         nombre_producto8 = QLabel('Lechuga 1 und: \n$3.300', ventana_verduras)
         nombre_producto8.setGeometry(800, 450, 250, 80)
         nombre_producto8.setFont(QFont('Times New Roman', 10))
-        b = QCheckBox("Añadir al carrito", ventana_verduras)
-        b.move(800, 520)
-        b.resize(320, 40)
+        self.check_lechuga = QCheckBox("Añadir al carrito", ventana_verduras)
+        self.check_lechuga.move(800, 520)
+        self.check_lechuga.resize(320, 40)
         # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        b.setCursor(Qt.PointingHandCursor)
+        self.check_lechuga.setCursor(Qt.PointingHandCursor)
+        self.valor_lechuga = 3300
+        self.check_lechuga.toggled.connect(self.mostrar_nombre_precios_lechuga)
+        self.check_lechuga.toggled.connect(self.agregar_al_carrito_lechuga)
 
         # Añadimos los QLabel a la ventana de frutas
         layout = QVBoxLayout()
@@ -399,6 +509,44 @@ class Ventana(QWidget):
         boton_volver.move(ventana_verduras.width() - boton_volver.width() - 10,
                           ventana_verduras.height() - boton_volver.height() - 10)
         boton_volver.clicked.connect(lambda: (ventana_verduras.close(), self.show()))
+
+        self.mensaje_precio9 = QLabel('', ventana_verduras)
+        self.mensaje_precio9.setGeometry(1100, 50, 200, 50)
+        self.mensaje_precio9.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio10 = QLabel('', ventana_verduras)
+        self.mensaje_precio10.setGeometry(1100, 90, 200, 50)
+        self.mensaje_precio10.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio11 = QLabel('', ventana_verduras)
+        self.mensaje_precio11.setGeometry(1100, 130, 300, 50)
+        self.mensaje_precio11.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio12 = QLabel('', ventana_verduras)
+        self.mensaje_precio12.setGeometry(1100, 170, 300, 50)
+        self.mensaje_precio12.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio13 = QLabel('', ventana_verduras)
+        self.mensaje_precio13.setGeometry(1100, 210, 300, 50)
+        self.mensaje_precio13.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio14 = QLabel('', ventana_verduras)
+        self.mensaje_precio14.setGeometry(1100, 250, 300, 50)
+        self.mensaje_precio14.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio15 = QLabel('', ventana_verduras)
+        self.mensaje_precio15.setGeometry(1100, 290, 300, 50)
+        self.mensaje_precio15.setFont(QFont('Times New Roman', 10))
+
+        self.mensaje_precio16 = QLabel('', ventana_verduras)
+        self.mensaje_precio16.setGeometry(1100, 330, 300, 50)
+        self.mensaje_precio16.setFont(QFont('Times New Roman', 10))
+
+
+        self.labeltitulo = QLabel("saldo: " + str(self.saldo), ventana_verduras)
+        self.labeltitulo.setGeometry(1000, 520, 400, 30)
+        self.labeltitulo.setAlignment(Qt.AlignCenter)
+        self.labeltitulo.setFont(QFont('Times New Roman', 12))
 
         ventana_verduras.exec_()
 
@@ -433,12 +581,21 @@ class Ventana(QWidget):
         boton_volver.clicked.connect(lambda: (ventana_carrito.close(), self.show()))
 
         ventana_carrito.exec_()
-
+    # --- METODOS DE LAS FRUTAS ------
     def abrir_ventana_personal(self):
         self.hide()  # Ocultamos la ventana actual
         self.ventana_personal = QDialog(self)
         self.ventana_personal.setWindowTitle('PERSONAL AUTORIZADO')
         self.ventana_personal.resize(1000, 800)
+
+        # Cargar la imagen de fondo
+        background_image = QPixmap("imagenes/fondo personal.png")
+
+        # Crear una etiqueta para mostrar la imagen de fondo
+        background_label = QLabel(self.ventana_personal)
+        background_label.setPixmap(background_image)
+        background_label.setGeometry(0, 0, 1000, 800)
+        background_label.lower()
 
         # Creamos los campos de texto para ingresar el nombre completo y la cédula
         nombre_label = QLabel('NOMBRE COMPLETO*: ', self.ventana_personal)
@@ -615,15 +772,18 @@ class Ventana(QWidget):
 
         boton_volver.clicked.connect(lambda: (self.ventana_personal.close(), self.show()))
 
+
         self.ventana_personal.exec_()
 
     def abrir_ventaInformacion(self):
         # Ocultamos la ventana actual
         self.ventana_personal.close()
 
+
+
         ventana_informacion = QDialog(self)
-        ventana_informacion.setWindowTitle('INFORMACION DE REGISTRO')
-        ventana_informacion.resize(1200, 600)  # Tamaño personalizado para que todos los elementos sean visibles
+        ventana_informacion.setWindowTitle('INFORMACIÓN DE REGISTRO')
+        ventana_informacion.resize(1500, 700)  # Tamaño personalizado para que todos los elementos sean visibles
         ventana_informacion.setStyleSheet('background-color: white;')
 
         # abrimos el archivo en modo de lectura:
@@ -635,10 +795,10 @@ class Ventana(QWidget):
         # recorremos el archivo línea por línea:
         while self.file:
             linea = self.file.readline().decode('UTF-8')
-            # Obtenemos del string una lista con  datos separados por ;
+            # Obtenemos del string una lista con datos separados por ;
 
             lista = linea.split(";")
-            # se para si ya no hay mas registros en el archivo
+            # se para sí ya no hay más registros en el archivo
             if linea == '':
                 break
             # Creamos un objeto de tipo cliente llamdo u
@@ -661,11 +821,40 @@ class Ventana(QWidget):
         # consultamos el tamaño de la lista usuarios:
         self.numeroUsuarios = len(self.usuarios)
 
+
         # contador de elementos para controlar los usuarios en la lista usuarios.
         self.contador = 0
 
         # Establecemos la distribución de los elementos en layout vertical:
         self.vertical = QVBoxLayout()
+
+        # ---- CONSTRUIR EL MENÚ TOOLBAR ---
+        toolbar = QToolBar('Main toolbar')
+        toolbar.setIconSize(QSize(64, 64))
+        self.addToolBar(toolbar)
+
+        # Agrega los botones al menú de la barra de herramientas
+        # Ejemplo de botón de eliminación
+        delete = QAction(QIcon('imagenes/delete.jpeg'), '&Delete', self)
+        delete.triggered.connect(self.accion_delete)
+        toolbar.addAction(delete)
+
+        # Ejemplo de botón de adición
+        add = QAction(QIcon('imagenes/add.jpeg'), '&Add', self)
+        add.triggered.connect(self.accion_add)
+        toolbar.addAction(add)
+
+        # Ejemplo de botón de inserción
+        insert = QAction(QIcon('imagenes/edit.jpeg'), '&Insert', self)
+        insert.triggered.connect(self.accion_insert)
+        toolbar.addAction(insert)
+        # ----FIN MENÚ TOOLBAR -----
+
+        self.vertical.addWidget(toolbar)
+
+
+        # Establecemos la distribución de los elementos en layout vertical:
+        layout = QVBoxLayout()
 
         # Hacemos el letrero:
         self.letrero1 = QLabel()
@@ -726,7 +915,7 @@ class Ventana(QWidget):
         # Métodos en el layout vertical el scroll:
         self.vertical.addWidget(self.scrollArea)
 
-        # Ponemos un espacio después:
+        # ponemos un espacio despues:
         self.vertical.addStretch()
 
         # Creamos el botón para volver a la ventana principal
@@ -744,6 +933,531 @@ class Ventana(QWidget):
         ventana_informacion.setLayout(self.vertical)
 
         ventana_informacion.exec_()
+
+    def agregar_al_carrito(self):
+        if self.check_fresa.isChecked():
+            self.saldo = self.saldo + self.valor_fresa
+        else:
+            self.saldo = self.saldo - self.valor_fresa
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+    def agregar_al_carrito_sandia(self):
+        if self.check_sandia.isChecked():
+            self.saldo = self.saldo + self.valor_sandia
+        else:
+            self.saldo = self.saldo - self.valor_sandia
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_pina(self):
+        if self.check_pina.isChecked():
+            self.saldo = self.saldo + self.valor_pina
+        else:
+            self.saldo = self.saldo - self.valor_pina
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_pera(self):
+        if self.check_pera.isChecked():
+            self.saldo = self.saldo + self.valor_pera
+        else:
+            self.saldo = self.saldo - self.valor_pera
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    # Metodos Frutas
+    def agregar_al_carrito_uva(self):
+        if self.check_uva.isChecked():
+            self.saldo = self.saldo + self.valor_uva
+        else:
+            self.saldo = self.saldo - self.valor_uva
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_mango(self):
+        if self.check_mango.isChecked():
+            self.saldo = self.saldo + self.valor_mango
+        else:
+            self.saldo = self.saldo - self.valor_mango
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_papaya(self):
+        if self.check_papaya.isChecked():
+            self.saldo = self.saldo + self.valor_papaya
+        else:
+            self.saldo = self.saldo - self.valor_papaya
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_manzana(self):
+        if self.check_manzana.isChecked():
+            self.saldo = self.saldo + self.valor_manzana
+        else:
+            self.saldo = self.saldo - self.valor_manzana
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    #---- MEETODOS DE LAS VERDURAS ------
+    def agregar_al_carrito_apio(self):
+        if self.check_apio.isChecked():
+            self.saldo = self.saldo + self.valor_apio
+        else:
+            self.saldo = self.saldo - self.valor_apio
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_cilantro(self):
+        if self.check_cilantro.isChecked():
+            self.saldo = self.saldo + self.valor_cilantro
+        else:
+            self.saldo = self.saldo - self.valor_cilantro
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_cebolla(self):
+        if self.check_cebolla.isChecked():
+            self.saldo = self.saldo + self.valor_cebolla
+        else:
+            self.saldo = self.saldo - self.valor_cebolla
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_zanahoria(self):
+        if self.check_zanhoria.isChecked():
+            self.saldo = self.saldo + self.valor_zanahoria
+        else:
+            self.saldo = self.saldo - self.valor_zanahoria
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_ceboBlanca(self):
+        if self.check_ceboBlanca.isChecked():
+            self.saldo = self.saldo + self.valor_ceboBlanca
+        else:
+            self.saldo = self.saldo - self.valor_ceboBlanca
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_ceboRoja(self):
+        if self.check_ceboRoja.isChecked():
+            self.saldo = self.saldo + self.valor_ceboRoja
+        else:
+            self.saldo = self.saldo - self.valor_ceboRoja
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_verengena(self):
+        if self.check_verengena.isChecked():
+            self.saldo = self.saldo + self.valor_veregena
+        else:
+            self.saldo = self.saldo - self.valor_veregena
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+    def agregar_al_carrito_lechuga(self):
+        if self.check_lechuga.isChecked():
+            self.saldo = self.saldo + self.valor_lechuga
+        else:
+            self.saldo = self.saldo - self.valor_lechuga
+        texto = "saldo: " + str(self.saldo)
+        self.labeltitulo.setText(texto)
+        print("valor de la compra: " + str(self.saldo))
+
+     # para poder ver los precios y el nombre del producto (FRUTAS)
+
+    def mostrar_nombre_precio_fresa(self, checked1):
+        if checked1:
+            nombre_producto = "Bandeja de fresa"
+            precio_producto = self.valor_fresa
+            mensaje = f"{nombre_producto}: ${precio_producto}"
+            self.mensaje_precio.setText(mensaje)
+        else:
+            self.mensaje_precio.clear()
+
+    def mostrar_nombre_precios_sandia(self, checked2):
+        if checked2:
+            nombre_producto2 = "Sandia 1 und"
+            precio_producto2 = self.valor_sandia
+            mensaje2 = f"{nombre_producto2}: ${precio_producto2}"
+            self.mensaje_precio2.setText(mensaje2)
+        else:
+            self.mensaje_precio2.clear()
+
+    def mostrar_nombre_precios_pina(self, checked3):
+        if checked3:
+            nombre_producto3 = "Piña 1 und"
+            precio_producto3 = self.valor_pina
+            mensaje3 = f"{nombre_producto3}: ${precio_producto3}"
+            self.mensaje_precio3.setText(mensaje3)
+        else:
+            self.mensaje_precio3.clear()
+
+    def mostrar_nombre_precios_pera(self, checked4):
+        if checked4:
+            nombre_producto4 = "Pera 1 und"
+            precio_producto4 = self.valor_pera
+            mensaje4 = f"{nombre_producto4}: ${precio_producto4}"
+            self.mensaje_precio4.setText(mensaje4)
+        else:
+            self.mensaje_precio4.clear()
+
+    def mostrar_nombre_precios_uva(self, checked5):
+        if checked5:
+            nombre_producto5 = "Bandeja de uva"
+            precio_producto5 = self.valor_uva
+            mensaje5 = f"{nombre_producto5}: ${precio_producto5}"
+            self.mensaje_precio5.setText(mensaje5)
+        else:
+            self.mensaje_precio5.clear()
+
+    def mostrar_nombre_precios_mango(self, checked6):
+        if checked6:
+            nombre_producto6 = "Mango 1 und"
+            precio_producto6 = self.valor_mango
+            mensaje6 = f"{nombre_producto6}: ${precio_producto6}"
+            self.mensaje_precio6.setText(mensaje6)
+        else:
+            self.mensaje_precio6.clear()
+
+    def mostrar_nombre_precios_papaya(self, checked7):
+        if checked7:
+            nombre_producto7 = "Papaya 1 und"
+            precio_producto7 = self.valor_papaya
+            mensaje7 = f"{nombre_producto7}: ${precio_producto7}"
+            self.mensaje_precio7.setText(mensaje7)
+        else:
+            self.mensaje_precio7.clear()
+
+    def mostrar_nombre_precios_manzana(self, checked8):
+        if checked8:
+            nombre_producto8 = "Manzana 1 und"
+            precio_producto8 = self.valor_manzana
+            mensaje8 = f"{nombre_producto8}: ${precio_producto8}"
+            self.mensaje_precio8.setText(mensaje8)
+        else:
+            self.mensaje_precio8.clear()
+
+    # para poder ver los precios y el nombre del producto (VERDURAS)
+
+    # ---- METODOS DE ADD,EDIT Y DELETE ---------
+
+    def mostrar_nombre_precios_apio(self, checked9):
+        if checked9:
+            nombre_producto9 = "Apio 700 GR"
+            precio_producto9 = self.valor_apio
+            mensaje8 = f"{nombre_producto9}: ${precio_producto9}"
+            self.mensaje_precio9.setText(mensaje8)
+        else:
+            self.mensaje_precio9.clear()
+
+    def mostrar_nombre_precios_cilantro(self, checked10):
+        if checked10:
+            nombre_producto10 = "Cilantro 100 GR"
+
+            precio_producto10 = self.valor_cilantro
+            mensaje10 = f"{nombre_producto10}: ${precio_producto10}"
+            self.mensaje_precio10.setText(mensaje10)
+        else:
+            self.mensaje_precio10.clear()
+
+    def mostrar_nombre_precios_cebolla(self, checked11):
+        if checked11:
+            nombre_producto11 = "Cebolla Junca 500 GR"
+
+            precio_producto11 = self.valor_cebolla
+            mensaje11 = f"{nombre_producto11}: ${precio_producto11}"
+            self.mensaje_precio11.setText(mensaje11)
+        else:
+            self.mensaje_precio11.clear()
+
+    def mostrar_nombre_precios_zanahoria(self, checked12):
+        if checked12:
+            nombre_producto12 = "Zanahoria 1000 GR"
+
+            precio_producto12 = self.valor_zanahoria
+            mensaje12 = f"{nombre_producto12}: ${precio_producto12}"
+            self.mensaje_precio12.setText(mensaje12)
+        else:
+            self.mensaje_precio12.clear()
+
+    def mostrar_nombre_precios_cebollaBlanca(self, checked13):
+        if checked13:
+            nombre_producto13 = "Cebolla Blanca 1 und"
+
+            precio_producto13 = self.valor_ceboBlanca
+            mensaje13 = f"{nombre_producto13}: ${precio_producto13}"
+            self.mensaje_precio13.setText(mensaje13)
+        else:
+            self.mensaje_precio13.clear()
+
+    def mostrar_nombre_precios_cebollaRoja(self, checked14):
+        if checked14:
+            nombre_producto14 = "Cebolla Roja 1 und"
+
+            precio_producto14 = self.valor_ceboRoja
+            mensaje14 = f"{nombre_producto14}: ${precio_producto14}"
+            self.mensaje_precio14.setText(mensaje14)
+        else:
+            self.mensaje_precio14.clear()
+
+    def mostrar_nombre_precios_verengena(self, checked15):
+        if checked15:
+            nombre_producto15 = "Berenjena 1 und"
+
+            precio_producto15 = self.valor_veregena
+            mensaje15 = f"{nombre_producto15}: ${precio_producto15}"
+            self.mensaje_precio15.setText(mensaje15)
+        else:
+            self.mensaje_precio15.clear()
+
+    def mostrar_nombre_precios_lechuga(self, checked16):
+        if checked16:
+            nombre_producto16 = "Lechuga 1 und"
+
+            precio_producto16 = self.valor_lechuga
+            mensaje16 = f"{nombre_producto16}: ${precio_producto16}"
+            self.mensaje_precio16.setText(mensaje16)
+        else:
+            self.mensaje_precio16.clear()
+
+    def accion_delete(self):
+        filaActual = self.tabla.currentRow()
+
+        if filaActual < 0:
+            return QMessageBox.warning(self,
+                                       'Warning',
+                                       'Para borrar, debe seleccionar un registro')
+
+        boton = QMessageBox.question(
+            self,
+            'Confirmation',
+            '¿Estas Segura de que quieres borrar este registro?',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+
+        )
+        if boton == QMessageBox.StandardButton.Yes:
+            if (
+                    self.tabla.item(filaActual, 0).text() != '' and
+                    self.tabla.item(filaActual, 1).text() != '' and
+                    self.tabla.item(filaActual, 2).text() != '' and
+                    self.tabla.item(filaActual, 3).text() != ''
+
+            ):
+                # abrimos el archivo en modo de lectura:
+                self.file = open('datos/clientes.txt', 'rb')
+
+                # Lista vacia para guardar todos los usuarios:
+                self.usuarios = []
+
+                # recorremos el archivo línea por línea:
+                while self.file:
+                    linea = self.file.readline().decode('UTF-8')
+                    # Obtenemos del string una lista con datos separados por ;
+
+                    lista = linea.split(";")
+                    # se para sí ya no hay más registros en el archivo
+                    if linea == '':
+                        break
+                    # Creamos un objeto de tipo cliente llamdo u
+                    u = Cliente(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                        lista[3],
+
+                    )
+                    # Metemos el objeto en la lista de ususarios:
+                    self.usuarios.append(u)
+
+                # Cerramos el archivo:
+                self.file.close()
+                # En este punto ya tenmos la lista usuarios con todos los ususarios:
+
+                # Recoremos la lista de usuarios:
+                for u in self.usuarios:
+                    # buscamos el usuario por el documento:
+                    if (
+                            u.cedula == self.tabla.item(filaActual, 2).text()
+                    ):
+                        # Removemos el usuario d ela lista de usuarios:
+                        self.usuarios.remove(u)
+
+                        # Paramos el for
+                        break
+                # abrimos los archivos en modo escritura para reeescribir los datos sin el usuario borrado.
+                self.file = open('datos/clientes.txt', 'wb')
+
+                # Recorremos la lista de usuarios por usuarios en el archivo.
+                for u in self.usuarios:
+                    self.file.write(bytes(u.nombre_completo + ";"
+                                          + u.cedula + ";"
+                                          + u.codigo_ingresado + ";"
+                                          + u.datetime, encoding='UTF-8'))
+
+                # Cerrar el archivo:
+                self.file.close()
+
+                # Hacemos que en la tabla no se vea el registro:
+                self.tabla.removeRow(filaActual)
+
+                return QMessageBox.question(
+                    self,
+                    'confirmation',
+                    'El registro ha sido eliminado exitosamente.',
+                    QMessageBox.StandardButton.Ok
+                )
+            else:
+
+                # Hacemos que en la tabla no se vea el registro en caso de tratarse de una fila vacia:
+                self.tabla.removeRow(filaActual)
+
+    def accion_add(self):
+        # obtenemos el número de filas que tiene la tabla.
+        ultimaFila = self.tabla.rowCount()
+
+        # Insertamos una fila nueva despues de la ultima fila:
+        self.tabla.insertRow(ultimaFila)
+
+        # Llenamos cada celda de la nueva fila con un string vacio '':
+        self.tabla.setItem(ultimaFila, 0, QTableWidgetItem(''))
+        self.tabla.setItem(ultimaFila, 1, QTableWidgetItem(''))
+        self.tabla.setItem(ultimaFila, 2, QTableWidgetItem(''))
+        self.tabla.setItem(ultimaFila, 3, QTableWidgetItem(''))
+
+    def accion_insert(self):
+        filaActual = self.tabla.currentRow()
+        if filaActual < 0:
+            return QMessageBox.warning(self,
+                                       'Warning',
+                                       'Para ingresar, debe seleccionar un registro')
+        boton = QMessageBox.question(
+            self,
+            'Confirmation',
+            '¿Estas Segura de que quieres ingresar este nuevo  registro?',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+
+        )
+        # Variable para controlar que se hayan ingresado todos los datos:
+        datosVacios = True
+
+        if boton == QMessageBox.StandardButton.Yes:
+
+            # validamos que se hayan ingresado los datos
+            if (
+                    self.tabla.item(filaActual, 0).text() != '' and
+                    self.tabla.item(filaActual, 1).text() != '' and
+                    self.tabla.item(filaActual, 2).text() != '' and
+                    self.tabla.item(filaActual, 3).text() != ''
+            ):
+                # Actualiza mos varible para indicar que se ingresaron todos los datos:
+                datosVacios = False
+
+                # Abrimos el archivo en modo lectura
+                self.file = open('datos/clientes.txt', 'rb')
+
+                # Lista vacia para guardar todos los usuarios:
+                self.usuarios = []
+
+                # recorremos el archivo línea por línea:
+                while self.file:
+                    linea = self.file.readline().decode('UTF-8')
+                    # Obtenemos del string una lista con datos separados por ;
+
+                    lista = linea.split(";")
+                    # se para sí ya no hay más registros en el archivo
+                    if linea == '':
+                        break
+                    # Creamos un objeto de tipo cliente llamdo u
+                    u = Cliente(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                        lista[3],
+
+                    )
+                    # Metemos el objeto en la lista de ususarios:
+                    self.usuarios.append(u)
+
+                # Cerramos el archivo:
+                self.file.close()
+                # En este punto ya tenmos la lista usuarios con todos los ususarios.
+                # variable para controlar que ya existe el registro:
+                existeRegistro = False
+                # variable para controlar si ya es un registro que ya existe y se va a editar:
+                existeDocumento = False
+                # Recorremos la lista de Usuarios:
+                for u in self.usuarios:
+
+                    # comparamos que todos los datos de registro ingresado:
+                    if (
+                            u.nombre_completo == self.tabla.item(filaActual, 0).text() and
+                            u.cedula == self.tabla.item(filaActual, 1).text() and
+                            u.codigo_ingresado == self.tabla.item(filaActual, 2).text() and
+                            u.datetime == self.tabla.item(filaActual, 3).text()
+
+                    ):
+                        # Indicamos que encontramos el documento:
+                        existeRegistro = True
+
+                        return QMessageBox.warning(self, 'Warning', 'Resgistro duplicado, no se puede registrar')
+
+                        # paramos el  for:
+                        break
+                    # si los datos son diferentes a los que existen:
+                    if not existeRegistro:
+
+                        # Recorremos la lista de usuarios
+                        for u in self.usuarios:
+                            # comparamos todos los datos del registro ingresado con el documento:
+                            if (
+                                    u.cedula == self.tabla.item(filaActual, 2).text()
+
+                            ):
+                                # Indicamos que encontramos el documento:
+                                existeDocumento = True
+
+                                u.nombre_completo = self.tabla.item(filaActual, 0).text()
+                                u.cedula = self.tabla.item(filaActual, 1).text()
+                                u.codigo_ingresado = self.tabla.item(filaActual, 2).text()
+                                u.datetime = self.tabla.item(filaActual, 3).text()
+
+                                # abrimos los archivos en modo escritura para reeescribir los datos sin el usuario borrado.
+                                self.file = open('datos/clientes.txt', 'wb')
+
+                                # Recorremos la lista de usuarios por usuarios en el archivo.
+                                for u in self.usuarios:
+                                    self.file.write(bytes(u.nombre_completo + ";"
+                                                          + u.cedula + ";"
+                                                          + u.codigo_ingresado + ";"
+                                                          + u.datetime, encoding='UTF-8'))
+
+                                self.file.seek(0, 2)
+                                self.file.close()
+
+                            return QMessageBox.question(
+                                self,
+                                'confirmation',
+                                'Los datos del registro se han editado exitosamente.',
+                                QMessageBox.StandardButton.Ok
+                            )
+                    if datosVacios:
+                        return QMessageBox.warning(self, 'Warning', 'Debe ingresar todos los datos en el registro')
 
 
 

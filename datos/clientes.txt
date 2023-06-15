@@ -4,10 +4,8 @@ juan;123456;disfrutappi;2023-05-12
 juan;123456;disfrutappi;2023-05-12
 Juan Angel;12345;disfrutappi;2023-05-12
 juan;1234567;disfrutappi;2023-05-14
-juan;12334567;disfrutappi;2023-05-14
-juan;123445;disfrutappi;2023-05-15
-juan ;12398;disfrutappi;2023-05-16
-juan;1234434;disfrutappi;2023-05-16
-juan otero;1062433097;disfrutappi;2023-05-18
-juan;123456;disfrutappi;2023-05-18
-juan;1234567;disfrutappi;2023-05-18
+Alejandro ;123455789;disfrutappi;2023-05-22
+LUIS ZAPATA;12345678910;disfrutappi;2023-06-05
+juan;123456;disfrutappi;2023-06-06
+JUAN ANGEL;12394098;disfrutappi;2023-06-08
+juan angel;1233456;disfrutappi;2023-06-13
