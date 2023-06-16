@@ -1,0 +1,5 @@
+Apio 700 GR: $4.100;Cebolla Junca 500 GR: $5.100;Pera 1 und: $1.700;;;;;;;;;;saldo: 11900
+;;;;;;;Cebolla Roja 1 und: $700;Berenjena 1 und: $2.200;;;;saldo: 2900
+Apio 700 GR: $4.100;;;;;;;;;;;;saldo: 4100
+;;;;;;;;;Manzana 1 und: $1.700;Sandia 1 und: $13.500;Mango 1 und: $1.800;saldo: 17000
+;;;;;;;Cebolla Roja 1 und: $700;Berenjena 1 und: $2.200;Manzana 1 und: $1.700;;;saldo: 4600

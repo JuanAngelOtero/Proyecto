@@ -6,6 +6,10 @@ from PyQt5.QtGui import QPixmap, QFont, QIcon
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from cliente import Cliente
+from pedidos import Pedidos
+from PyQt5 import QtCore
+
+
 class Ventana(QMainWindow):
     saldo = 0
     def __init__(self):
@@ -584,9 +588,24 @@ class Ventana(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
         ventana_verduras.setLayout(layout)
 
+        self.nombre1 = ("")
+        self.nombre2 = ("")
+        self.nombre3 = ("")
+        self.nombre4 = ("")
+        self.nombre5 = ("")
+        self.nombre6 = ("")
+        self.nombre7 = ("")
+        self.nombre8 = ("")
+        self.nombre9 = ("")
+        self.nombre10 = ("")
+        self.nombre11 = ("")
+        self.nombre12 = ("")
+
+
+
         self.boton_enviar_carrito = QPushButton("Enviar al carrito", ventana_verduras)
         self.boton_enviar_carrito.setGeometry(10, 750, 200, 40)
-#        self.boton_enviar_carrito.clicked.connect(self.enviar_al_carrito)
+        self.boton_enviar_carrito.clicked.connect(self.enviar_al_carrito)
 
         # Creamos el botón para volver a la ventana principal
         boton_volver = QPushButton('Volver', ventana_verduras)
@@ -669,7 +688,131 @@ class Ventana(QMainWindow):
 
         boton_volver.clicked.connect(lambda: (self.ventana_carrito.close(), self.show()))
 
+
+
+
+        # abrimos el archivo  en modo binario
+        self.file = open('datos/pedidos.txt', 'rb')
+
+        # creamos una lista vacia
+        pedidos = []
+
+        while self.file:
+            # lea el archivo y traiga los datos
+            linea = self.file.readline().decode('UTF-8')
+
+            # elimine el ; y ponga en una posicion
+            lista = linea.split(";")
+
+            # se para si ya no hay mas registros
+            if linea == '':
+                break
+            # creamos un objeto tipo cliente llamado u
+            pd = Pedidos(
+                lista[0],
+                lista[1],
+                lista[2],
+                lista[3],
+                lista[4],
+                lista[5],
+                lista[6],
+                lista[7],
+                lista[8],
+                lista[9],
+                lista[10],
+                lista[11],
+                lista[12],
+            )
+            # Metemos el objeto en la lista usuario
+            pedidos.append(pd)
+
+        self.file.close()
+
+        # En este punto tenemos la lista de usuario con todos los usuarios
+
+        for pd in pedidos:
+
+            mensaje_nombre1 = QLabel(pd.nombre1, self.ventana_carrito)
+            mensaje_nombre1.setGeometry(300, 100, 200, 50)
+            mensaje_nombre1.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre1.setFixedWidth(400)
+            mensaje_nombre1.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre2 = QLabel(pd.nombre2, self.ventana_carrito)
+            mensaje_nombre2.setGeometry(300, 150, 200, 50)
+            mensaje_nombre2.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre2.setFixedWidth(400)
+            mensaje_nombre2.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre3 = QLabel(pd.nombre3, self.ventana_carrito)
+            mensaje_nombre3.setGeometry(300, 200, 200, 50)
+            mensaje_nombre3.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre3.setFixedWidth(400)
+            mensaje_nombre3.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre4 = QLabel(pd.nombre4, self.ventana_carrito)
+            mensaje_nombre4.setGeometry(300, 250, 200, 50)
+            mensaje_nombre4.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre4.setFixedWidth(400)
+            mensaje_nombre4.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre5 = QLabel(pd.nombre5, self.ventana_carrito)
+            mensaje_nombre5.setGeometry(300, 300, 200, 50)
+            mensaje_nombre5.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre5.setFixedWidth(400)
+            mensaje_nombre5.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre6 = QLabel(pd.nombre6, self.ventana_carrito)
+            mensaje_nombre6.setGeometry(300, 350, 200, 50)
+            mensaje_nombre6.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre6.setFixedWidth(400)
+            mensaje_nombre6.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre7 = QLabel(pd.nombre7, self.ventana_carrito)
+            mensaje_nombre7.setGeometry(300, 400, 200, 50)
+            mensaje_nombre7.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre7.setFixedWidth(400)
+            mensaje_nombre7.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre8 = QLabel(pd.nombre8, self.ventana_carrito)
+            mensaje_nombre8.setGeometry(300, 450, 200, 50)
+            mensaje_nombre8.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre8.setFixedWidth(400)
+            mensaje_nombre8.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre9 = QLabel(pd.nombre9, self.ventana_carrito)
+            mensaje_nombre9.setGeometry(300, 500, 200, 50)
+            mensaje_nombre9.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre9.setFixedWidth(400)
+            mensaje_nombre9.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre10 = QLabel(pd.nombre10, self.ventana_carrito)
+            mensaje_nombre10.setGeometry(300, 550, 200, 50)
+            mensaje_nombre10.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre10.setFixedWidth(400)
+            mensaje_nombre10.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre11 = QLabel(pd.nombre11, self.ventana_carrito)
+            mensaje_nombre11.setGeometry(300, 600, 200, 50)
+            mensaje_nombre11.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre11.setFixedWidth(400)
+            mensaje_nombre11.setFont(QFont('Times New Roman', 12))
+
+            mensaje_nombre12 = QLabel(pd.nombre12, self.ventana_carrito)
+            mensaje_nombre12.setGeometry(300, 650, 200, 50)
+            mensaje_nombre12.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre12.setFixedWidth(400)
+            mensaje_nombre12.setFont(QFont('Times New Roman', 12))
+
+            mensaje_saldo = QLabel(pd.saldo, self.ventana_carrito)
+            mensaje_saldo.setGeometry(300, 700, 200, 50)
+            mensaje_saldo.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_saldo.setFixedWidth(400)
+            mensaje_saldo.setFont(QFont('Times New Roman', 12))
+
         self.ventana_carrito.exec_()
+
+
 
 
 
@@ -793,6 +936,124 @@ class Ventana(QMainWindow):
                               ventana_otra.height() - boton_volver.height() - 10)
 
             boton_volver.clicked.connect(lambda: (ventana_otra.close(), self.show()))
+
+            # abrimos el archivo  en modo binario
+            self.file = open('datos/pedidos.txt', 'rb')
+
+            # creamos una lista vacia
+            pedidos = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                pd = Pedidos(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                    lista[4],
+                    lista[5],
+                    lista[6],
+                    lista[7],
+                    lista[8],
+                    lista[9],
+                    lista[10],
+                    lista[11],
+                    lista[12],
+                )
+                # Metemos el objeto en la lista usuario
+                pedidos.append(pd)
+
+            self.file.close()
+
+            # En este punto tenemos la lista de usuario con todos los usuarios
+
+            for pd in pedidos:
+                mensaje_nombre1 = QLabel(pd.nombre1,ventana_otra)
+                mensaje_nombre1.setGeometry(300, 100, 200, 50)
+                mensaje_nombre1.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre1.setFixedWidth(400)
+                mensaje_nombre1.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre2 = QLabel(pd.nombre2,ventana_otra)
+                mensaje_nombre2.setGeometry(300, 150, 200, 50)
+                mensaje_nombre2.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre2.setFixedWidth(400)
+                mensaje_nombre2.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre3 = QLabel(pd.nombre3,ventana_otra)
+                mensaje_nombre3.setGeometry(300, 200, 200, 50)
+                mensaje_nombre3.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre3.setFixedWidth(400)
+                mensaje_nombre3.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre4 = QLabel(pd.nombre4,ventana_otra)
+                mensaje_nombre4.setGeometry(300, 250, 200, 50)
+                mensaje_nombre4.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre4.setFixedWidth(400)
+                mensaje_nombre4.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre5 = QLabel(pd.nombre5,ventana_otra)
+                mensaje_nombre5.setGeometry(300, 300, 200, 50)
+                mensaje_nombre5.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre5.setFixedWidth(400)
+                mensaje_nombre5.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre6 = QLabel(pd.nombre6,ventana_otra)
+                mensaje_nombre6.setGeometry(300, 350, 200, 50)
+                mensaje_nombre6.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre6.setFixedWidth(400)
+                mensaje_nombre6.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre7 = QLabel(pd.nombre7,ventana_otra)
+                mensaje_nombre7.setGeometry(300, 400, 200, 50)
+                mensaje_nombre7.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre7.setFixedWidth(400)
+                mensaje_nombre7.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre8 = QLabel(pd.nombre8,ventana_otra)
+                mensaje_nombre8.setGeometry(300, 450, 200, 50)
+                mensaje_nombre8.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre8.setFixedWidth(400)
+                mensaje_nombre8.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre9 = QLabel(pd.nombre9,ventana_otra)
+                mensaje_nombre9.setGeometry(300, 500, 200, 50)
+                mensaje_nombre9.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre9.setFixedWidth(400)
+                mensaje_nombre9.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre10 = QLabel(pd.nombre10,ventana_otra)
+                mensaje_nombre10.setGeometry(300, 550, 200, 50)
+                mensaje_nombre10.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre10.setFixedWidth(400)
+                mensaje_nombre10.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre11 = QLabel(pd.nombre11,ventana_otra)
+                mensaje_nombre11.setGeometry(300, 600, 200, 50)
+                mensaje_nombre11.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre11.setFixedWidth(400)
+                mensaje_nombre11.setFont(QFont('Times New Roman', 12))
+
+                mensaje_nombre12 = QLabel(pd.nombre12,ventana_otra)
+                mensaje_nombre12.setGeometry(300, 650, 200, 50)
+                mensaje_nombre12.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_nombre12.setFixedWidth(400)
+                mensaje_nombre12.setFont(QFont('Times New Roman', 12))
+
+                mensaje_saldo = QLabel(pd.saldo,ventana_otra)
+                mensaje_saldo.setGeometry(300, 700, 200, 50)
+                mensaje_saldo.setStyleSheet('background-color: #B0F2C2; color: black;')
+                mensaje_saldo.setFixedWidth(400)
+                mensaje_saldo.setFont(QFont('Times New Roman', 12))
 
             ventana_otra.exec_()
 
@@ -1038,7 +1299,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_sandia(self):
         if self.check_sandia.isChecked():
             self.saldo = self.saldo + self.valor_sandia
+            self.nombre11 = ("Sandia 1 und: $13.500")
         else:
+            self.nombre11 = ("")
             self.saldo = self.saldo - self.valor_sandia
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1047,7 +1310,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_pina(self):
         if self.check_pina.isChecked():
             self.saldo = self.saldo + self.valor_pina
+            self.nombre5 = ("Piña 1 und: $6.500")
         else:
+            self.nombre5 = ("")
             self.saldo = self.saldo - self.valor_pina
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1056,7 +1321,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_pera(self):
         if self.check_pera.isChecked():
             self.saldo = self.saldo + self.valor_pera
+            self.nombre3 = ("Pera 1 und: $1.700")
         else:
+            self.nombre3 = ("")
             self.saldo = self.saldo - self.valor_pera
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1075,7 +1342,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_mango(self):
         if self.check_mango.isChecked():
             self.saldo = self.saldo + self.valor_mango
+            self.nombre12 = ("Mango 1 und: $1.800")
         else:
+            self.nombre12 = ("")
             self.saldo = self.saldo - self.valor_mango
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1085,7 +1354,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_papaya(self):
         if self.check_papaya.isChecked():
             self.saldo = self.saldo + self.valor_papaya
+            self.nombre4 = ("Papaya 1 und: $4.300")
         else:
+            self.nombre4 = ("")
             self.saldo = self.saldo - self.valor_papaya
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1094,7 +1365,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_manzana(self):
         if self.check_manzana.isChecked():
             self.saldo = self.saldo + self.valor_manzana
+            self.nombre10 = ("Manzana 1 und: $1.700")
         else:
+            self.nombre10 = ("")
             self.saldo = self.saldo - self.valor_manzana
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1104,7 +1377,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_apio(self):
         if self.check_apio.isChecked():
             self.saldo = self.saldo + self.valor_apio
+            self.nombre1 = ("Apio 700 GR: $4.100")
         else:
+            self.nombre1 = ("")
             self.saldo = self.saldo - self.valor_apio
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1122,7 +1397,9 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_cebolla(self):
         if self.check_cebolla.isChecked():
             self.saldo = self.saldo + self.valor_cebolla
+            self.nombre2 = ("Cebolla Junca 500 GR: $5.100")
         else:
+            self.nombre2 = ("")
             self.saldo = self.saldo - self.valor_cebolla
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
@@ -1140,6 +1417,7 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_ceboBlanca(self):
         if self.check_ceboBlanca.isChecked():
             self.saldo = self.saldo + self.valor_ceboBlanca
+            self.nombre7 = ("Cebolla Blanca 1 und: $1.100")
         else:
             self.saldo = self.saldo - self.valor_ceboBlanca
         texto = "saldo: " + str(self.saldo)
@@ -1149,6 +1427,7 @@ class Ventana(QMainWindow):
     def agregar_al_carrito_ceboRoja(self):
         if self.check_ceboRoja.isChecked():
             self.saldo = self.saldo + self.valor_ceboRoja
+            self.nombre8 = ("Cebolla Roja 1 und: $700")
         else:
             self.saldo = self.saldo - self.valor_ceboRoja
         texto = "saldo: " + str(self.saldo)
@@ -1156,13 +1435,17 @@ class Ventana(QMainWindow):
         print("valor de la compra: " + str(self.saldo))
 
     def agregar_al_carrito_verengena(self):
+
         if self.check_verengena.isChecked():
             self.saldo = self.saldo + self.valor_veregena
+            self.nombre9 = ("Berenjena 1 und: $2.200")
         else:
+            self.nombre9 = ("")
             self.saldo = self.saldo - self.valor_veregena
         texto = "saldo: " + str(self.saldo)
         self.labeltitulo.setText(texto)
         print("valor de la compra: " + str(self.saldo))
+
 
     def agregar_al_carrito_lechuga(self):
         if self.check_lechuga.isChecked():
@@ -1330,6 +1613,42 @@ class Ventana(QMainWindow):
             self.mensaje_precio16.setText(mensaje16)
         else:
             self.mensaje_precio16.clear()'''
+
+
+    def enviar_al_carrito(self):
+
+        # abrimos el archivo en modo agregar
+        self.file = open('datos/pedidos.txt', 'ab')
+
+        # Traer el texto de los Qline y los concatena con ;
+        self.file.write(bytes(
+            # Cajas de texto de la pestaña
+            self.nombre1 + ";" +
+            self.nombre2 + ";" +
+            self.nombre3 + ";" +
+            self.nombre4 + ";" +
+            self.nombre5 + ";" +
+            self.nombre6 + ";" +
+            self.nombre7 + ";" +
+            self.nombre8 + ";" +
+            self.nombre9 + ";" +
+            self.nombre10 + ";" +
+            self.nombre11 + ";" +
+            self.nombre12 + ";" +
+            self.labeltitulo.text() + "\n", encoding='UTF-8'))
+        self.file.close()
+
+        # abrimos en modo lectura en formato bite
+        self.file = open('datos/pedidos.txt', 'rb')
+
+        # recorrer el archivo linea x linea
+        while self.file:
+            linea = self.file.readline().decode('UTF-8')
+            if linea == '':
+                break
+
+        self.file.close()
+
 
     # ---- METODOS DE ADD,EDIT Y DELETE ---------
     def accion_delete(self):
@@ -1555,6 +1874,10 @@ class Ventana(QMainWindow):
                             )
                     if datosVacios:
                         return QMessageBox.warning(self, 'Warning', 'Debe ingresar todos los datos en el registro')
+
+
+
+
 
 
 
