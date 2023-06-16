@@ -49,18 +49,11 @@ class Ventana(QMainWindow):
         label_bienvenida.setGeometry(140, 0, self.width(), 50)
 
         # ----- BOTONES PRINCIPALES ------
-        # Botón FRUTAS
-        boton_frutas = QPushButton('FRUTAS', self)
-        boton_frutas.setGeometry(250, 150, 150, 120)
-        # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
-        boton_frutas.setCursor(Qt.PointingHandCursor)
-        boton_frutas.setStyleSheet('background-color: #FFB6AE;')
 
-        boton_frutas.clicked.connect(self.abrir_ventana_frutas)
 
         #  Botón VERDURA
-        boton_verduras = QPushButton('VERDURAS', self)
-        boton_verduras.setGeometry(250, 300, 150, 120)
+        boton_verduras = QPushButton('FRUTAS Y VERDURAS', self)
+        boton_verduras.setGeometry(250, 300, 250, 100)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
         boton_verduras.setCursor(Qt.PointingHandCursor)
         boton_verduras.setStyleSheet('background-color: #FAFCAF;')
@@ -68,7 +61,7 @@ class Ventana(QMainWindow):
 
         # botón CARRITO
         boton_carrito = QPushButton('CARRITO', self)
-        boton_carrito.setGeometry(250, 450, 150, 120)
+        boton_carrito.setGeometry(600, 300, 250, 100)
         # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
         boton_carrito.setCursor(Qt.PointingHandCursor)
         boton_carrito.setStyleSheet('background-color: #FFE1AE;')
@@ -82,260 +75,16 @@ class Ventana(QMainWindow):
         boton_personal.setStyleSheet('background-color: #B0F2C2;')
         boton_personal.clicked.connect(self.abrir_ventana_personal)
 
-    def abrir_ventana_frutas(self):
-        self.hide()  # Ocultamos la ventana actual
-        ventana_frutas = QDialog(self)
-        ventana_frutas.setWindowTitle('FRUTAS')
-        ventana_frutas.resize(1500, 800)
-        ventana_frutas.setStyleSheet('background-color: white;')
-
-        # Creamos un QLabel con el mensaje "Bienvenido"
-        mensaje_bienvenida = QLabel('BIENVENIDO AL CATÁLOGO DE FRUTAS', ventana_frutas)
-        mensaje_bienvenida.setGeometry(0, 0, 200, 20)
-        mensaje_bienvenida.setStyleSheet('background-color: #B0F2C2; color: black;')
-        mensaje_bienvenida.setAlignment(Qt.AlignCenter)
-        mensaje_bienvenida.setFont(QFont('Times New Roman', 10))
-
-        # CAR IMAGEN PRODUCT
-        # producto FRESA
-        label_imagen = QLabel('', ventana_frutas)
-        label_imagen.setGeometry(50, 50, 200, 200)
-        pixmap = QPixmap('imagenes/fresa.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen.setPixmap(pixmap)
-
-        nombre_producto = QLabel('Bandeja de fresa: \n$8.700', ventana_frutas)
-        # TAMAÑO TITULO
-        nombre_producto.setGeometry(50, 200, 250, 80)
-        nombre_producto.setFont(QFont('Times New Roman', 10))
-        self.check_fresa = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_fresa.move(50, 270)
-        self.check_fresa.resize(320, 40)
-
-        self.valor_fresa = 8700
-
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_fresa.setCursor(Qt.PointingHandCursor)
-        self.check_fresa.toggled.connect(self.mostrar_nombre_precio_fresa)
-        self.check_fresa.toggled.connect(self.agregar_al_carrito)
-        '''''
-        # producto sandia FRUTA2
-        label_imagen2 = QLabel('', ventana_frutas)
-        label_imagen2.setGeometry(320, 50, 200, 200)
-        pixmap = QPixmap('imagenes/fruta2.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen2.setPixmap(pixmap)
-
-        nombre_producto2 = QLabel('Sandia 1 und: \n$13.500', ventana_frutas)
-        nombre_producto2.setGeometry(320, 200, 250, 80)
-        nombre_producto2.setFont(QFont('Times New Roman', 10))
-        self.check_sandia = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_sandia.move(320, 270)
-        self.check_sandia.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_sandia.setCursor(Qt.PointingHandCursor)
-        self.valor_sandia = 13500
-
-        self.check_sandia.toggled.connect(self.mostrar_nombre_precios_sandia)
-        self.check_sandia.toggled.connect(self.agregar_al_carrito_sandia)
-       
-        # producto piña FRUTA3
-        label_imagen3= QLabel('', ventana_frutas)
-        label_imagen3.setGeometry(550, 50, 200, 200)
-        pixmap = QPixmap('imagenes/fruta3.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen3.setPixmap(pixmap)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-
-
-
-        nombre_producto3 = QLabel('Piña 1 und: \n$6.500', ventana_frutas)
-        nombre_producto3.setGeometry(550, 200, 250, 80)
-        nombre_producto3.setFont(QFont('Times New Roman', 10))
-        self.check_pina = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_pina.move(550, 270)
-        self.check_pina.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_pina.setCursor(Qt.PointingHandCursor)
-        self.valor_pina= 6500
-        self.check_pina.toggled.connect(self.mostrar_nombre_precios_pina)
-        self.check_pina.toggled.connect(self.agregar_al_carrito_pina)
-
-             
-        # producto pera FRUTA4
-        label_imagen4 = QLabel('', ventana_frutas)
-        label_imagen4.setGeometry(800, 50, 200, 200)
-        pixmap = QPixmap('imagenes/fruta4.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen4.setPixmap(pixmap)
-
-
-        nombre_producto4 = QLabel('Pera 1 und: \n$1.700', ventana_frutas)
-        nombre_producto4.setGeometry(800, 200, 250, 80)
-        nombre_producto4.setFont(QFont('Times New Roman', 10))
-        self.check_pera = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_pera.move(800, 270)
-        self.check_pera.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_pera.setCursor(Qt.PointingHandCursor)
-        self.valor_pera = 1700
-        self.check_pera.toggled.connect(self.mostrar_nombre_precios_pera)
-        self.check_pera.toggled.connect(self.agregar_al_carrito_pera)'''
-
-        # producto uva Fruta5
-        label_imagen5 = QLabel('', ventana_frutas)
-        label_imagen5.setGeometry(50, 320, 200, 200)
-        pixmap = QPixmap('imagenes/fruta5.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen5.setPixmap(pixmap)
-
-        nombre_producto5 = QLabel('Bandeja de uva: \n$15.400', ventana_frutas)
-        nombre_producto5.setGeometry(50, 450, 250, 80)
-        nombre_producto5.setFont(QFont('Times New Roman', 10))
-        self.check_uva = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_uva.move(50, 520)
-        self.check_uva.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_uva.setCursor(Qt.PointingHandCursor)
-        self.valor_uva = 15400
-        self.check_uva.toggled.connect(self.mostrar_nombre_precios_uva)
-        self.check_uva.toggled.connect(self.agregar_al_carrito_uva)
-        '''
-        # producto mango FRUTA6
-        label_imagen6 = QLabel('', ventana_frutas)
-        label_imagen6.setGeometry(320, 300, 200, 200)
-        pixmap = QPixmap('imagenes/fruta6.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen6.setPixmap(pixmap)
-
-        nombre_producto6 = QLabel('Mango 1 und: \n$1.800', ventana_frutas)
-        nombre_producto6.setGeometry(320, 450, 250, 80)
-        nombre_producto6.setFont(QFont('Times New Roman', 10))
-        self.check_mango = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_mango.move(320, 520)
-        self.check_mango.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_mango.setCursor(Qt.PointingHandCursor)
-        self.valor_mango = 1800
-        self.check_mango.toggled.connect(self.mostrar_nombre_precios_mango)
-        self.check_mango.toggled.connect(self.agregar_al_carrito_mango)
-        
-        # producto Papaya FRUTA7
-        label_imagen7 = QLabel('', ventana_frutas)
-        label_imagen7.setGeometry(550, 300, 200, 200)
-        pixmap = QPixmap('imagenes/fruta7.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen7.setPixmap(pixmap)
-
-        nombre_producto7 = QLabel('Papaya 1 und: \n$4.300', ventana_frutas)
-        nombre_producto7.setGeometry(550, 450, 250, 80)
-        nombre_producto7.setFont(QFont('Times New Roman', 10))
-        self.check_papaya = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_papaya.move(550, 520)
-        self.check_papaya.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_papaya.setCursor(Qt.PointingHandCursor)
-        self.valor_papaya = 4300
-        self.check_papaya.toggled.connect(self.mostrar_nombre_precios_papaya)
-        self.check_papaya.toggled.connect(self.agregar_al_carrito_papaya)
-
-
-        
-        # producto Manzana FRUTA8
-        label_imagen8 = QLabel('', ventana_frutas)
-        label_imagen8.setGeometry(800, 300, 200, 200)
-        pixmap = QPixmap('imagenes/fruta8.jpg')
-        pixmap = pixmap.scaledToWidth(100)  # Ajustamos el tamaño de la imagen a 100 píxeles de ancho
-        label_imagen8.setPixmap(pixmap)
-
-        
-        nombre_producto8 = QLabel('Manzana 1 und: \n$1.700', ventana_frutas)
-        nombre_producto8.setGeometry(800, 450, 250, 80)
-        nombre_producto8.setFont(QFont('Times New Roman', 10))
-        self.check_manzana = QCheckBox("Añadir al carrito", ventana_frutas)
-        self.check_manzana.move(800, 520)
-        self.check_manzana.resize(320, 40)
-        # Cambiar el cursor cuando el ratón pase sobre el QCheckBox
-        self.check_manzana.setCursor(Qt.PointingHandCursor)
-        self.valor_manzana = 1700
-        self.check_manzana.toggled.connect(self.mostrar_nombre_precios_manzana)
-        self.check_manzana.toggled.connect(self.agregar_al_carrito_manzana)
-        '''
-
-
-
-        # Añadimos los QLabel a la ventana de frutas
-        layout = QVBoxLayout()
-        layout.addWidget(mensaje_bienvenida)
-        layout.addStretch()
-        layout.addStretch()
-        layout.setAlignment(Qt.AlignCenter)
-        ventana_frutas.setLayout(layout)
-
-        # Creamos el botón para volver a la ventana principal
-        boton_volver = QPushButton('Volver', ventana_frutas)
-        boton_volver.setGeometry(110, 150, 100, 30)
-        boton_volver.setStyleSheet('background-color: #FFB6AE;')
-        # Cambiar el cursor al pasar el puntero por encima del botón "Volver"
-        boton_volver.setCursor(Qt.PointingHandCursor)
-        boton_volver.move(ventana_frutas.width() - boton_volver.width() - 10,
-                          ventana_frutas.height() - boton_volver.height() - 10)
-        boton_volver.clicked.connect(lambda: (ventana_frutas.close(), self.show()))
-
-        #self.mensaje_precio = QLabel('', ventana_frutas)
-        #self.mensaje_precio.setGeometry(1100, 50, 200, 50)
-        #self.mensaje_precio.setFont(QFont('Times New Roman', 10))
-
-        #self.mensaje_precio2 = QLabel('', ventana_frutas)
-        #self.mensaje_precio2.setGeometry(1100, 90, 200, 50)
-        #self.mensaje_precio2.setFont(QFont('Times New Roman', 10))
-
-        #self.mensaje_precio3 = QLabel('', ventana_frutas)
-        #self.mensaje_precio3.setGeometry(1100, 130, 200, 50)
-        #self.mensaje_precio3.setFont(QFont('Times New Roman', 10))
-
-
-        #self.mensaje_precio4 = QLabel('', ventana_frutas)
-        #self.mensaje_precio4.setGeometry(1100, 170, 200, 50)
-        #self.mensaje_precio4.setFont(QFont('Times New Roman', 10))
-
-        #self.mensaje_precio5 = QLabel('', ventana_frutas)
-        #self.mensaje_precio5.setGeometry(1100, 210, 200, 50)
-        #self.mensaje_precio5.setFont(QFont('Times New Roman', 10))
-
-        #self.mensaje_precio6 = QLabel('', ventana_frutas)
-        #self.mensaje_precio6.setGeometry(1100, 250, 200, 50)
-        #self.mensaje_precio6.setFont(QFont('Times New Roman', 10))
-
-
-        #self.mensaje_precio7 = QLabel('', ventana_frutas)
-        #self.mensaje_precio7.setGeometry(1100, 290, 200, 50)
-        #self.mensaje_precio7.setFont(QFont('Times New Roman', 10))
-
-
-       # self.mensaje_precio8 = QLabel('', ventana_frutas)
-       # self.mensaje_precio8.setGeometry(1100, 330, 200, 50)
-       # self.mensaje_precio8.setFont(QFont('Times New Roman', 10))
-
-        #self.labeltitulo = QLabel("saldo: "+ str(self.saldo), ventana_frutas)
-        #self.labeltitulo.setGeometry(1000, 520, 400, 30)
-        #self.labeltitulo.setAlignment(Qt.AlignCenter)
-        #self.labeltitulo.setFont(QFont('Times New Roman', 12))
-
-
-
-
-        ventana_frutas.exec_()
 
     def abrir_ventana_verduras(self):
         self.hide()  # Ocultamos la ventana actual
         ventana_verduras = QDialog(self)
         ventana_verduras.setWindowTitle('VERDURA')
-        ventana_verduras.resize(1500, 800)
+        ventana_verduras.resize(1400, 800)
         ventana_verduras.setStyleSheet('background-color: white;')
 
         # Creamos un QLabel con el mensaje "Bienvenido"
-        mensaje_bienvenida = QLabel('BIENVENIDO AL CATÁLOGO DE VERDURAS', ventana_verduras)
+        mensaje_bienvenida = QLabel('BIENVENIDO AL CATÁLOGO DE FRUTAS Y VERDURAS', ventana_verduras)
         mensaje_bienvenida.setGeometry(0, 0, 200, 50)
         mensaje_bienvenida.setStyleSheet('background-color: #B0F2C2; color: black;')
         mensaje_bienvenida.setAlignment(Qt.AlignCenter)
@@ -605,6 +354,7 @@ class Ventana(QMainWindow):
 
         self.boton_enviar_carrito = QPushButton("Enviar al carrito", ventana_verduras)
         self.boton_enviar_carrito.setGeometry(10, 750, 200, 40)
+        self.boton_enviar_carrito.setStyleSheet('background-color: #FAFCAF;')
         self.boton_enviar_carrito.clicked.connect(self.enviar_al_carrito)
 
         # Creamos el botón para volver a la ventana principal
@@ -663,6 +413,12 @@ class Ventana(QMainWindow):
         self.ventana_carrito = QDialog(self)
         self.ventana_carrito.setWindowTitle('CARRITO')
         self.ventana_carrito.resize(1000, 800)
+        self.ventana_carrito.setStyleSheet('background-color: #FFF8DC;')  # Establece el color de fondo café con leche
+
+        # Dentro del método donde creas la ventana existente
+        # Crear una etiqueta para el fondo
+
+
 
         # Creamos un QLabel con el mensaje "Bienvenido"
         mensaje_bienvenida = QLabel('PRODUCTOS AGREGADOS', self.ventana_carrito)
@@ -671,11 +427,15 @@ class Ventana(QMainWindow):
         mensaje_bienvenida.setAlignment(Qt.AlignCenter)
         mensaje_bienvenida.setFont(QFont('Times New Roman', 12))
 
+
+
         # Añadimos el QLabel a la ventana de frutas
         layout = QVBoxLayout()
         layout.addWidget(mensaje_bienvenida)
         layout.addStretch()
         self.ventana_carrito.setLayout(layout)
+
+
 
         # Creamos el botón para volver a la ventana principal
         boton_volver = QPushButton('Volver', self.ventana_carrito)
@@ -687,7 +447,6 @@ class Ventana(QMainWindow):
                           self.ventana_carrito.height() - boton_volver.height() - 10)
 
         boton_volver.clicked.connect(lambda: (self.ventana_carrito.close(), self.show()))
-
 
 
 
@@ -734,79 +493,79 @@ class Ventana(QMainWindow):
 
             mensaje_nombre1 = QLabel(pd.nombre1, self.ventana_carrito)
             mensaje_nombre1.setGeometry(300, 100, 200, 50)
-            mensaje_nombre1.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre1.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre1.setFixedWidth(400)
             mensaje_nombre1.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre2 = QLabel(pd.nombre2, self.ventana_carrito)
             mensaje_nombre2.setGeometry(300, 150, 200, 50)
-            mensaje_nombre2.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre2.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre2.setFixedWidth(400)
             mensaje_nombre2.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre3 = QLabel(pd.nombre3, self.ventana_carrito)
             mensaje_nombre3.setGeometry(300, 200, 200, 50)
-            mensaje_nombre3.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre3.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre3.setFixedWidth(400)
             mensaje_nombre3.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre4 = QLabel(pd.nombre4, self.ventana_carrito)
             mensaje_nombre4.setGeometry(300, 250, 200, 50)
-            mensaje_nombre4.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre4.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre4.setFixedWidth(400)
             mensaje_nombre4.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre5 = QLabel(pd.nombre5, self.ventana_carrito)
             mensaje_nombre5.setGeometry(300, 300, 200, 50)
-            mensaje_nombre5.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre5.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre5.setFixedWidth(400)
             mensaje_nombre5.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre6 = QLabel(pd.nombre6, self.ventana_carrito)
             mensaje_nombre6.setGeometry(300, 350, 200, 50)
-            mensaje_nombre6.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre6.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre6.setFixedWidth(400)
             mensaje_nombre6.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre7 = QLabel(pd.nombre7, self.ventana_carrito)
             mensaje_nombre7.setGeometry(300, 400, 200, 50)
-            mensaje_nombre7.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre7.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre7.setFixedWidth(400)
             mensaje_nombre7.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre8 = QLabel(pd.nombre8, self.ventana_carrito)
             mensaje_nombre8.setGeometry(300, 450, 200, 50)
-            mensaje_nombre8.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre8.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre8.setFixedWidth(400)
             mensaje_nombre8.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre9 = QLabel(pd.nombre9, self.ventana_carrito)
             mensaje_nombre9.setGeometry(300, 500, 200, 50)
-            mensaje_nombre9.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre9.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre9.setFixedWidth(400)
             mensaje_nombre9.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre10 = QLabel(pd.nombre10, self.ventana_carrito)
             mensaje_nombre10.setGeometry(300, 550, 200, 50)
-            mensaje_nombre10.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre10.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre10.setFixedWidth(400)
             mensaje_nombre10.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre11 = QLabel(pd.nombre11, self.ventana_carrito)
             mensaje_nombre11.setGeometry(300, 600, 200, 50)
-            mensaje_nombre11.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre11.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre11.setFixedWidth(400)
             mensaje_nombre11.setFont(QFont('Times New Roman', 12))
 
             mensaje_nombre12 = QLabel(pd.nombre12, self.ventana_carrito)
             mensaje_nombre12.setGeometry(300, 650, 200, 50)
-            mensaje_nombre12.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_nombre12.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_nombre12.setFixedWidth(400)
             mensaje_nombre12.setFont(QFont('Times New Roman', 12))
 
             mensaje_saldo = QLabel(pd.saldo, self.ventana_carrito)
             mensaje_saldo.setGeometry(300, 700, 200, 50)
-            mensaje_saldo.setStyleSheet('background-color: #B0F2C2; color: black;')
+            mensaje_saldo.setStyleSheet('background-color: #FFFFFF; color: black;')
             mensaje_saldo.setFixedWidth(400)
             mensaje_saldo.setFont(QFont('Times New Roman', 12))
 
@@ -910,9 +669,10 @@ class Ventana(QMainWindow):
             ventana_otra = QDialog(self)
             ventana_otra.setWindowTitle('PERSONAL AUTORIZADO')
             ventana_otra.resize(1000, 800)
+            ventana_otra.setStyleSheet('background-color: #FFFFE0;')  # Establece un color de fondo amarillo muy claro
 
             # Creamos un QLabel con el mensaje "Bienvenido"
-            mensaje_bienvenida = QLabel('PEDIDOS', ventana_otra)
+            mensaje_bienvenida = QLabel('PEDIDO DEL CLIENTE', ventana_otra)
             mensaje_bienvenida.setGeometry(0, 0, 200, 50)
             mensaje_bienvenida.setStyleSheet('background-color: #B0F2C2; color: black;')
             mensaje_bienvenida.setAlignment(Qt.AlignCenter)
